@@ -2,10 +2,10 @@ name: Terraform infra
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths: ["diploma-infra/infra/**", ".github/workflows/terraform.yml"]
   pull_request:
-    branches: [main]
+    branches: [master]
     paths: ["diploma-infra/infra/**", ".github/workflows/terraform.yml"]
 
 env:
@@ -68,5 +68,5 @@ jobs:
 
       # На push в main — применяем изменения.
       - name: Terraform apply
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: terraform apply -auto-approve -input=false

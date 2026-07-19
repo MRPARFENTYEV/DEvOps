@@ -1,0 +1,4 @@
+[tool.pytest.ini_options]
+# Чтобы `from app.main import app` работал при запуске `pytest` из папки diploma-app.
+pythonpath = ["."]
+testpaths = ["tests"]

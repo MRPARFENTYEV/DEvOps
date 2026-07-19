@@ -5,10 +5,10 @@ name: App CI/CD
 # может не запустить деплой. Лишний прогон при infra-only коммитах безвреден.
 on:
   push:
-    branches: [main]
+    branches: [master]
     tags: ["v*"]
   pull_request:
-    branches: [main]
+    branches: [master]
     paths: ["diploma-app/**", ".github/workflows/app-ci-cd.yml"]
 
 env:
