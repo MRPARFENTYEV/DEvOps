@@ -1,7 +1,8 @@
 variable "yc_token" {
-  description = "OAuth-токен пользователя Яндекс.Облака"
+  description = "IAM/OAuth-токен (локально). В CI пусто — авторизация через ключ SA."
   type        = string
   sensitive   = true
+  default     = ""
 }
 
 variable "cloud_id" {

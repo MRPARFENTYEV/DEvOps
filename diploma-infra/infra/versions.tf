@@ -10,7 +10,9 @@ terraform {
 }
 
 provider "yandex" {
-  token     = var.yc_token
+  # Локально: IAM-токен через -var="yc_token=$(yc iam create-token)".
+  # В CI: token пустой → провайдер берёт ключ SA из env YC_SERVICE_ACCOUNT_KEY_FILE.
+  token     = var.yc_token != "" ? var.yc_token : null
   cloud_id  = var.cloud_id
   folder_id = var.folder_id
   zone      = var.zones[0]

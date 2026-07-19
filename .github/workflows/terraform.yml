@@ -12,8 +12,9 @@ env:
   # Данные для S3-backend (Object Storage). Секреты заводятся в настройках репо.
   AWS_ACCESS_KEY_ID: ${{ secrets.YC_STORAGE_ACCESS_KEY }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_STORAGE_SECRET_KEY }}
-  # Переменные Terraform через TF_VAR_*.
-  TF_VAR_yc_token: ${{ secrets.YC_TOKEN }}
+  # Авторизация провайдера через ключ SA (SA-ключи не подпадают под запрет обмена OAuth→IAM).
+  # Файл с ключом пишется в шаге ниже; yc_token в CI остаётся пустым.
+  YC_SERVICE_ACCOUNT_KEY_FILE: ${{ github.workspace }}/yc-sa-key.json
   TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
   TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
   TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
@@ -28,6 +29,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Записать ключ сервисного аккаунта
+        run: echo '${{ secrets.YC_SA_KEY_TF }}' > "$YC_SERVICE_ACCOUNT_KEY_FILE"
+        working-directory: ${{ github.workspace }}
 
       - uses: hashicorp/setup-terraform@v3
         with:
