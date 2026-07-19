@@ -1,0 +1,7 @@
+# Скопируй в backend.hcl и заполни значениями из `terraform output` в bootstrap.
+# Затем:  terraform init -backend-config=backend.hcl
+# backend.hcl в git НЕ коммитится.
+
+bucket     = "diploma-tfstate-uniquename-2026"
+access_key = "YCAJExxxxxxxxxxxxxxxx"
+secret_key = "YCxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"

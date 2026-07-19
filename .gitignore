@@ -1,0 +1,36 @@
+# Корневой .gitignore монорепо. Вложенные .gitignore в подпапках тоже действуют.
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# IDE
+.idea/
+
+# Terraform (дубль правил на случай запуска из корня)
+*.tfvars
+!*.tfvars.example
+backend.hcl
+!backend.hcl.example
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Ключи/секреты
+*.pem
+key.json
+ci-sa-key.json
+
+# Ansible
+diploma-ansible/inventory/mycluster/hosts.yml
+diploma-ansible/inventory/mycluster/artifacts/
+diploma-ansible/inventory/mycluster/credentials/
+diploma-ansible/kubespray/
+diploma-ansible/.kubespray-venv/
+*.creds
+
+# Служебное
+plan.md

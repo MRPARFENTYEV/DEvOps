@@ -1,0 +1,97 @@
+name: App CI/CD
+
+# Монорепо: воркфлоу приложения. Триггерится на push в main и на теги vX.Y.Z.
+# paths-фильтр НЕ ставим специально — иначе push тега (без изменений файлов)
+# может не запустить деплой. Лишний прогон при infra-only коммитах безвреден.
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+    paths: ["diploma-app/**", ".github/workflows/app-ci-cd.yml"]
+
+env:
+  IMAGE_NAME: diploma-app
+
+jobs:
+  test:
+    name: Тесты
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: diploma-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Установить зависимости
+        run: pip install -r requirements-dev.txt
+
+      - name: Прогнать pytest
+        run: pytest -v
+
+  build-push:
+    name: Сборка и push в Yandex Container Registry
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: diploma-app
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Определить версию образа
+        id: meta
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Логин в YCR
+        run: |
+          echo '${{ secrets.YC_SA_KEY }}' \
+            | docker login --username json_key --password-stdin cr.yandex
+
+      - name: Собрать образ
+        run: |
+          IMAGE="cr.yandex/${{ secrets.YC_REGISTRY_ID }}/${IMAGE_NAME}"
+          docker build \
+            --build-arg APP_VERSION="${{ steps.meta.outputs.version }}" \
+            -t "${IMAGE}:${{ steps.meta.outputs.version }}" \
+            -t "${IMAGE}:latest" \
+            .
+
+      - name: Запушить образ
+        run: |
+          IMAGE="cr.yandex/${{ secrets.YC_REGISTRY_ID }}/${IMAGE_NAME}"
+          docker push "${IMAGE}:${{ steps.meta.outputs.version }}"
+          docker push "${IMAGE}:latest"
+
+  deploy:
+    name: Деплой в Kubernetes (только по тегу)
+    needs: build-push
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Настроить kubeconfig
+        run: |
+          mkdir -p "$HOME/.kube"
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > "$HOME/.kube/config"
+          chmod 600 "$HOME/.kube/config"
+
+      - name: Обновить образ в Deployment
+        run: |
+          IMAGE="cr.yandex/${{ secrets.YC_REGISTRY_ID }}/${IMAGE_NAME}:${{ needs.build-push.outputs.version }}"
+          kubectl -n diploma set image deployment/diploma-app app="${IMAGE}"
+
+      - name: Дождаться выката
+        run: kubectl -n diploma rollout status deployment/diploma-app --timeout=180s

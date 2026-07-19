@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: diploma-app
+  namespace: diploma
+  labels:
+    app: diploma-app
+spec:
+  selector:
+    app: diploma-app
+  ports:
+    - name: http          # имя порта важно: на него ссылается ServiceMonitor
+      port: 80
+      targetPort: http

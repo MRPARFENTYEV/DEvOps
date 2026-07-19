@@ -1,0 +1,12 @@
+# Скопируй в terraform.tfvars и впиши свои значения.
+# terraform.tfvars в git НЕ коммитится.
+
+yc_token       = "AQAAAAxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+cloud_id       = "b1gxxxxxxxxxxxxxxxxx"
+folder_id      = "b1gxxxxxxxxxxxxxxxxx"
+ssh_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA... user@host"
+
+# При необходимости переопредели ресурсы/зоны:
+# zones            = ["ru-central1-a", "ru-central1-b", "ru-central1-d"]
+# worker_count     = 2
+# master_resources = { cores = 2, memory = 6, core_fraction = 20 }

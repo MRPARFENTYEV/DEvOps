@@ -1,0 +1,7 @@
+# Скопируй в terraform.tfvars и впиши свои значения.
+# terraform.tfvars в git НЕ коммитится (см. .gitignore).
+
+yc_token          = "AQAAAAxxxxxxxxxxxxxxxxxxxxxxxxxxx"   # OAuth-токен, https://oauth.yandex.ru
+cloud_id          = "b1gxxxxxxxxxxxxxxxxx"
+folder_id         = "b1gxxxxxxxxxxxxxxxxx"
+state_bucket_name = "diploma-tfstate-uniquename-2026"      # имя должно быть глобально уникальным

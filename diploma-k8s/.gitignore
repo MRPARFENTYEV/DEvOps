@@ -1,0 +1,5 @@
+# Возможные локальные секреты — не коммитим.
+*-secret.yaml
+!*-secret.yaml.example
+kubeconfig
+*.tmp

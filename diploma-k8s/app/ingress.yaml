@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: diploma-app
+  namespace: diploma
+spec:
+  ingressClassName: nginx
+  rules:
+    # ЗАМЕНИ 93.77.181.129 на публичный IP master-ноды. nip.io резолвит имя в этот IP,
+    # поэтому отдельный DNS не нужен. Доступ: http://app.93.77.181.129.nip.io
+    - host: app.93.77.181.129.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: diploma-app
+                port:
+                  number: 80

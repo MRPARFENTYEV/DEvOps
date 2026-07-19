@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: diploma-app
+  namespace: diploma
+  labels:
+    app: diploma-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: diploma-app
+  template:
+    metadata:
+      labels:
+        app: diploma-app
+    spec:
+      # Секрет для доступа к приватному Yandex Container Registry.
+      # Создаётся отдельно (см. README): kubectl create secret docker-registry ycr-secret ...
+      imagePullSecrets:
+        - name: ycr-secret
+      containers:
+        - name: app
+          # ЗАМЕНИ crp2sacoc6l7cikv0dnn на ID реестра из bootstrap-output.
+          # Дальнейшие версии выкатывает CI командой `kubectl set image`.
+          image: cr.yandex/crp2sacoc6l7cikv0dnn/diploma-app:latest
+          ports:
+            - name: http
+              containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

@@ -1,0 +1,24 @@
+# values для helm-чарта ingress-nginx на self-hosted кластере.
+# Контроллер поднимается как DaemonSet с hostNetwork на master-ноде
+# (у неё единственный публичный IP), слушая :80 и :443 напрямую.
+controller:
+  kind: DaemonSet
+  hostNetwork: true
+  hostPort:
+    enabled: true
+  dnsPolicy: ClusterFirstWithHostNet
+
+  # Запускать только на master-ноде (там публичный IP).
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+
+  service:
+    enabled: false        # публикуемся через hostPort, LoadBalancer не нужен
+
+  # Метрики контроллера для Prometheus.
+  metrics:
+    enabled: true

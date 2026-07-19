@@ -1,0 +1,32 @@
+# values для helm-чарта kube-prometheus-stack (Prometheus + Grafana + Alertmanager + node-exporter).
+# Урезано под скромные ресурсы кластера.
+
+# Разрешаем Prometheus видеть ServiceMonitor'ы без метки release
+# (иначе наш servicemonitor.yaml не будет подхвачен).
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    retention: 3d
+    resources:
+      requests:
+        cpu: 100m
+        memory: 400Mi
+    storageSpec: {}       # emptyDir — без PV (экономия; при рестарте метрики теряются)
+
+grafana:
+  adminPassword: "admin"  # ДЕМО. Смени на реальный или вынеси в secret.
+  service:
+    type: ClusterIP
+  # Автозагрузка кастомного дашборда приложения из ConfigMap с меткой grafana_dashboard.
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 20m
+        memory: 64Mi

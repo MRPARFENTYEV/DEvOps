@@ -1,0 +1,9 @@
+# Инвентарь с реальными IP и скачанный kubeconfig — не коммитим.
+inventory/mycluster/hosts.yml
+inventory/mycluster/artifacts/
+inventory/mycluster/credentials/
+*.retry
+kubespray/
+.kubespray-venv/
+admin.conf
+*.creds

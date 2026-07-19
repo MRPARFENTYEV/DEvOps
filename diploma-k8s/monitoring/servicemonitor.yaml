@@ -1,0 +1,19 @@
+# Говорит Prometheus скрейпить /metrics нашего приложения.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: diploma-app
+  namespace: diploma
+  labels:
+    release: kube-prometheus-stack
+spec:
+  namespaceSelector:
+    matchNames:
+      - diploma
+  selector:
+    matchLabels:
+      app: diploma-app
+  endpoints:
+    - port: http          # совпадает с именем порта в service.yaml
+      path: /metrics
+      interval: 15s
