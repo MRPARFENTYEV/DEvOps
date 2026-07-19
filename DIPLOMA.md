@@ -102,7 +102,7 @@ master-ноде; `terraform destroy` при простое.
 ## 4. Состав репозиториев
 
 Всё хранится в **одном репозитории** на GitHub — монорепозиторий `diploma-devops` с четырьмя подпапками.
-Ссылка на репозиторий: _<ссылка на diploma-devops>_
+Ссылка на репозиторий: **https://github.com/MRPARFENTYEV/DEvOps**
 
 | Папка | Назначение |
 |---|---|
@@ -254,11 +254,11 @@ kubectl apply -f monitoring/ -f namespace.yaml -f app/   # после подст
 | Пункт правил приёма | Конфигурация | Развёрнуто / ссылка |
 |---|---|---|
 | `diploma-infra` — Terraform (bootstrap + infra), создание с нуля | ✅ написана, `validate` OK | ✅ `apply` прошёл, ресурсы созданы |
-| CI-CD-terraform pipeline: пример PR + apply в Actions | ✅ workflow готов | ⬜ нет прогона/PR (после push) |
+| CI-CD-terraform pipeline: пример PR + apply в Actions | ✅ workflow готов | ✅ пайплайн зелёный (apply в Actions) |
 | `diploma-ansible` — конфигурация Kubespray | ✅ готова | ✅ кластер поднят (3 ноды Ready) |
 | `diploma-app` — Dockerfile + образ в YCR | ✅ готов | ✅ образ `diploma-app:latest` в YCR |
 | `diploma-k8s` — манифесты Kubernetes, дашборды Grafana | ✅ готовы, YAML валиден | ✅ применены (ingress + мониторинг + app) |
 | Ссылки на приложение и Grafana + данные доступа | — | ✅ работают (см. раздел 7) |
-| CI/CD приложения: сборка при коммите, деплой по тегу | ✅ workflow готов | ⬜ нет прогона (после push) |
-| Всё в одном репозитории (монорепо `diploma-devops`) | ✅ структура готова локально | ⬜ не запушен на GitHub |
+| CI/CD приложения: сборка при коммите, деплой по тегу | ✅ workflow готов | ✅ App CI/CD зелёный (сборка+push) |
+| Всё в одном репозитории (монорепо `DEvOps`) | ✅ структура готова | ✅ запушен на GitHub |
 

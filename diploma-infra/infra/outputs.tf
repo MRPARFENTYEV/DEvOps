@@ -26,3 +26,4 @@ output "ansible_hosts" {
     workers = [for w in yandex_compute_instance.worker : w.network_interface[0].nat_ip_address]
   }
 }
+# trigger ci
