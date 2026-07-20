@@ -262,3 +262,13 @@ kubectl apply -f monitoring/ -f namespace.yaml -f app/   # после подст
 | CI/CD приложения: сборка при коммите, деплой по тегу | ✅ workflow готов | ✅ App CI/CD зелёный (сборка+push) |
 | Всё в одном репозитории (монорепо `DEvOps`) | ✅ структура готова | ✅ запушен на GitHub |
 
+скрины actions:
+![img.png](img.png)
+grafana
+![img_1.png](img_1.png)
+приложение в браузере
+![img_2.png](img_2.png)
+ycr
+![img_3.png](img_3.png)
+kubectl get nodes
+![img_4.png](img_4.png)
